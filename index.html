@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Firefish Calculator</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="https://framerusercontent.com/images/mUS8OpDjRHMNz8b04Gz7sx0LQX0.png" type="image/png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 </head>
 <body>
@@ -34,7 +35,8 @@
             <input type="number" id="loan-amount" name="loan-amount" step="0.01" required>
 
             <label for="interest-rate">Interest Rate (% p.a.):</label>
-            <input type="number" id="interest-rate" name="interest-rate" step="0.01" required>
+            <input type="range" id="interest-rate" name="interest-rate" min="0" max="20" step="0.5" value="0" oninput="updateInterestRateLabel(this.value)">
+            <span id="interest-rate-label">0%</span>
 
             <button type="button" onclick="calculateCollateral()">Calculate</button>
         </form>

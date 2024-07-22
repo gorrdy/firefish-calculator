@@ -74,6 +74,10 @@ function selectDuration(months) {
     document.querySelector(`.tile[onclick="selectDuration(${months})"]`).classList.add('selected');
 }
 
+function updateInterestRateLabel(value) {
+    document.getElementById('interest-rate-label').innerText = value + "%";
+}
+
 function calculateCollateral() {
     const startDate = document.getElementById('start-date').value;
     const months = parseInt(document.getElementById('months').value);
@@ -158,6 +162,37 @@ function calculateCollateral() {
 
 // Load the CSV file and exchange rates when the page loads
 document.addEventListener('DOMContentLoaded', function() {
+    Promise.all([loadCSV('BTC-USD.csv'), loadExchangeRates()]).then(() => {
+        console.log('CSV file and exchange rates loaded successfully.');
+    }).catch(error => {
+        console.error('Error loading CSV file or exchange rates:', error);
+    });
+});
+
+function setDefaultValues() {
+    // Set default date to 12 months ago
+    let today = new Date();
+    let twelveMonthsAgo = new Date(today.setMonth(today.getMonth() - 12));
+    let formattedDate = twelveMonthsAgo.toISOString().split('T')[0];
+    document.getElementById('start-date').value = formattedDate;
+
+    // Set default currency to Euro
+    document.getElementById('currency').value = 'EUR';
+
+    // Set default interest rate to 7%
+    document.getElementById('interest-rate').value = 7;
+    updateInterestRateLabel(7); // Update the label
+
+    // Set default loan amount to 5000 EUR
+    document.getElementById('loan-amount').value = 5000;
+
+    // Set default loan duration to 12 months
+    selectDuration(12);
+}
+
+// Call the function when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    setDefaultValues();
     Promise.all([loadCSV('BTC-USD.csv'), loadExchangeRates()]).then(() => {
         console.log('CSV file and exchange rates loaded successfully.');
     }).catch(error => {
