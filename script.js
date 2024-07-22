@@ -82,8 +82,17 @@ function calculateCollateral() {
 
     const loanAmountUSD = convertToUSD(loanAmount, currency);
 
-    // Calculate the collateral amount (double the loan amount) and convert to BTC
-    const collateralUSD = loanAmountUSD * 2;
+    // Calculate the total amount due using the compound interest formula
+    let n = 12; // number of compounding periods per year
+    let t = months / 12; // time in years
+    let r = interestRate / 100; // annual nominal interest rate as a decimal
+
+    // A = P(1 + r/n)^(nt)
+    let accruedAmount = loanAmountUSD * Math.pow((1 + r / n), (n * t));
+    let totalAmountDueUSD = accruedAmount;
+
+    // Calculate the collateral amount (double the total amount due) and convert to BTC
+    const collateralUSD = totalAmountDueUSD * 2;
 
     // Calculate the end date
     let startDateObj = new Date(startDate);
@@ -111,14 +120,8 @@ function calculateCollateral() {
             let finalValue = collateralBTC * endPrice;
             let appreciation = finalValue - initialValue;
 
-            // Calculate the interest paid using the compound interest formula
-            let n = 12; // number of compounding periods per year
-            let t = months / 12; // time in years
-            let r = interestRate / 100; // annual nominal interest rate as a decimal
-
-            // A = P(1 + r/n)^(nt)
-            let accruedAmount = loanAmountUSD * Math.pow((1 + r / n), (n * t));
-            let interestPaidUSD = accruedAmount - loanAmountUSD;
+            // Calculate the interest paid
+            let interestPaidUSD = totalAmountDueUSD - loanAmountUSD;
 
             // Determine if the loan was worth it
             let loanWorthIt = appreciation > interestPaidUSD ? "Yes" : "No";
@@ -128,12 +131,14 @@ function calculateCollateral() {
             let initialValueInCurrency = convertFromUSD(initialValue, currency);
             let finalValueInCurrency = convertFromUSD(finalValue, currency);
             let appreciationInCurrency = convertFromUSD(appreciation, currency);
+            let totalAmountDueInCurrency = convertFromUSD(totalAmountDueUSD, currency);
 
             // Display the result in the original currency
             document.getElementById('result-text').innerHTML = `
                 Start Date: ${startDate}<br>
                 End Date: ${endDate}<br>
                 Loan Amount: ${loanAmount.toFixed(2)} ${currency}<br>
+                Total Amount Due: ${totalAmountDueInCurrency.toFixed(2)} ${currency}<br>
                 Collateral Amount: ${collateralBTC.toFixed(4)} BTC (worth ${convertFromUSD(collateralUSD, currency).toFixed(2)} ${currency})<br>
                 Initial Value: ${initialValueInCurrency.toFixed(2)} ${currency}<br>
                 Final Value: ${finalValueInCurrency.toFixed(2)} ${currency}<br>
