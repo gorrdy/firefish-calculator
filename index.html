@@ -22,10 +22,14 @@
                 <option value="18">18</option>
             </select>
 
-            <label for="collateral">Collateral Amount (BTC):</label>
-            <input type="number" id="collateral" name="collateral" step="0.0001" required>
+            <label for="currency">Currency:</label>
+            <select id="currency" name="currency" required>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="CZK">CZK</option>
+            </select>
 
-            <label for="loan-amount">Loan Amount ($):</label>
+            <label for="loan-amount">Loan Amount:</label>
             <input type="number" id="loan-amount" name="loan-amount" step="0.01" required>
 
             <label for="interest-rate">Interest Rate (% p.a.):</label>
