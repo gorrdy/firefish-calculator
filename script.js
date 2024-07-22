@@ -102,6 +102,7 @@ function setDefaultValues() {
     selectDuration(12);
 }
 
+
 function calculateCollateral() {
     const startDate = document.getElementById('start-date').value;
     const months = parseInt(document.getElementById('months').value);
@@ -158,27 +159,33 @@ function calculateCollateral() {
 
             // Determine if the loan was worth it
             let loanWorthIt = appreciation > interestPaidUSD ? "Yes" : "No";
+            let resultSign = appreciation > interestPaidUSD ? "+" : "";
 
             // Convert results back to the original currency
             let interestPaid = convertFromUSD(interestPaidUSD, currency);
             let initialValueInCurrency = convertFromUSD(initialValue, currency);
             let finalValueInCurrency = convertFromUSD(finalValue, currency);
             let appreciationInCurrency = convertFromUSD(appreciation, currency);
+            let result = appreciationInCurrency - interestPaid;
             let totalAmountDueInCurrency = convertFromUSD(totalAmountDueUSD, currency);
+
+            // Apply styles based on the values
+            const worthItStyle = loanWorthIt === "Yes" ? "green" : "red";
+            const resultSignStyle = result >= 0 ? "green" : "red";
 
             // Display the result in the original currency
             document.getElementById('result-text').innerHTML = `
-                Total Amount Due: ${totalAmountDueInCurrency.toFixed(2)} ${currency}<br>
-                Collateral Amount: ${collateralBTC.toFixed(4)} BTC (worth ${convertFromUSD(collateralUSD, currency).toFixed(2)} ${currency})<br>
-                Initial Value: ${initialValueInCurrency.toFixed(2)} ${currency}<br>
-                Final Value: ${finalValueInCurrency.toFixed(2)} ${currency}<br>
-                Appreciation: ${appreciationInCurrency.toFixed(2)} ${currency}<br>
+                Was the loan worth it? <span style="color: ${worthItStyle}; font-weight: bold;">${loanWorthIt}</span><br>
                 Interest Paid: ${interestPaid.toFixed(2)} ${currency}<br>
-                Was the loan worth it? ${loanWorthIt}
+                Collateral Amount: ${collateralBTC.toFixed(4)} BTC<br>
+                Collateral Appreciation: ${appreciationInCurrency.toFixed(2)} ${currency}<br>
+                Final result: <span style="color: ${resultSignStyle}; font-weight: bold;">${resultSign}${result.toFixed(2)} ${currency}</span><br>
             `;
         });
     });
 }
+
+
 
 // Debounce function to limit the calculation frequency
 function debounceCalculateCollateral() {

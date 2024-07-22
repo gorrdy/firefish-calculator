@@ -11,6 +11,9 @@
 <body>
     <div class="container">
         <h1>Firefish Calculator</h1>
+        <p class="description">
+            Firefish calculator lets you explore historical situations where using BTC as collateral paid off, showing the potential benefits of leveraging Bitcoin's long-term value growth.
+        </p>
         <form id="collateral-form">
             <label for="start-date">Start Date (YYYY-MM-DD):</label>
             <input type="date" id="start-date" name="start-date" required>
@@ -34,9 +37,11 @@
             <label for="loan-amount">Loan Amount:</label>
             <input type="number" id="loan-amount" name="loan-amount" step="0.01" required>
 
-            <label for="interest-rate">Interest Rate (% p.a.):</label>
+            <label for="interest-rate">Interest Rate (% p.a.):
+                <span id="interest-rate-label">0%</span>
+            </label>
             <input type="range" id="interest-rate" name="interest-rate" min="0" max="20" step="0.5" value="0" oninput="updateInterestRateLabel(this.value)">
-            <span id="interest-rate-label">0%</span>
+
         </form>
 
         <div id="result">
