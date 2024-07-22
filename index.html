@@ -37,14 +37,14 @@
             <label for="interest-rate">Interest Rate (% p.a.):</label>
             <input type="range" id="interest-rate" name="interest-rate" min="0" max="20" step="0.5" value="0" oninput="updateInterestRateLabel(this.value)">
             <span id="interest-rate-label">0%</span>
-
-            <button type="button" onclick="calculateCollateral()">Calculate</button>
         </form>
 
         <div id="result">
             <h2>Result</h2>
             <p id="result-text"></p>
         </div>
+
+        <a href="https://firefish.io/?ref=jednadvacet" class="borrow-button">Borrow on Firefish</a>
     </div>
 
     <script src="script.js"></script>

@@ -81,6 +81,23 @@ button:hover {
     background-color: #b8322f; /* Darker Firefish red for hover */
 }
 
+.borrow-button {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #e6413e; /* Firefish red */
+    color: #ffffff; /* White text */
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.borrow-button:hover {
+    background-color: #b8322f; /* Darker Firefish red for hover */
+}
+
 #result {
     margin-top: 20px;
 }
