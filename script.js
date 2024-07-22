@@ -1,5 +1,6 @@
 let btcData = {};
 let exchangeRates = {};
+let debounceTimeout;
 
 function loadCSV(filePath) {
     return new Promise((resolve, reject) => {
@@ -72,10 +73,33 @@ function selectDuration(months) {
     document.getElementById('months').value = months;
     document.querySelectorAll('.tile').forEach(tile => tile.classList.remove('selected'));
     document.querySelector(`.tile[onclick="selectDuration(${months})"]`).classList.add('selected');
+    debounceCalculateCollateral();
 }
 
 function updateInterestRateLabel(value) {
     document.getElementById('interest-rate-label').innerText = value + "%";
+    debounceCalculateCollateral();
+}
+
+function setDefaultValues() {
+    // Set default date to 12 months ago
+    let today = new Date();
+    let twelveMonthsAgo = new Date(today.setMonth(today.getMonth() - 12));
+    let formattedDate = twelveMonthsAgo.toISOString().split('T')[0];
+    document.getElementById('start-date').value = formattedDate;
+
+    // Set default currency to Euro
+    document.getElementById('currency').value = 'EUR';
+
+    // Set default interest rate to 7%
+    document.getElementById('interest-rate').value = 7;
+    updateInterestRateLabel(7); // Update the label
+
+    // Set default loan amount to 5000 EUR
+    document.getElementById('loan-amount').value = 5000;
+
+    // Set default loan duration to 12 months
+    selectDuration(12);
 }
 
 function calculateCollateral() {
@@ -86,7 +110,6 @@ function calculateCollateral() {
     const interestRate = parseFloat(document.getElementById('interest-rate').value);
 
     if (!startDate || isNaN(months) || isNaN(loanAmount) || isNaN(interestRate)) {
-        alert("Please fill in all fields correctly.");
         return;
     }
 
@@ -145,9 +168,6 @@ function calculateCollateral() {
 
             // Display the result in the original currency
             document.getElementById('result-text').innerHTML = `
-                Start Date: ${startDate}<br>
-                End Date: ${endDate}<br>
-                Loan Amount: ${loanAmount.toFixed(2)} ${currency}<br>
                 Total Amount Due: ${totalAmountDueInCurrency.toFixed(2)} ${currency}<br>
                 Collateral Amount: ${collateralBTC.toFixed(4)} BTC (worth ${convertFromUSD(collateralUSD, currency).toFixed(2)} ${currency})<br>
                 Initial Value: ${initialValueInCurrency.toFixed(2)} ${currency}<br>
@@ -160,34 +180,10 @@ function calculateCollateral() {
     });
 }
 
-// Load the CSV file and exchange rates when the page loads
-document.addEventListener('DOMContentLoaded', function() {
-    Promise.all([loadCSV('BTC-USD.csv'), loadExchangeRates()]).then(() => {
-        console.log('CSV file and exchange rates loaded successfully.');
-    }).catch(error => {
-        console.error('Error loading CSV file or exchange rates:', error);
-    });
-});
-
-function setDefaultValues() {
-    // Set default date to 12 months ago
-    let today = new Date();
-    let twelveMonthsAgo = new Date(today.setMonth(today.getMonth() - 12));
-    let formattedDate = twelveMonthsAgo.toISOString().split('T')[0];
-    document.getElementById('start-date').value = formattedDate;
-
-    // Set default currency to Euro
-    document.getElementById('currency').value = 'EUR';
-
-    // Set default interest rate to 7%
-    document.getElementById('interest-rate').value = 7;
-    updateInterestRateLabel(7); // Update the label
-
-    // Set default loan amount to 5000 EUR
-    document.getElementById('loan-amount').value = 5000;
-
-    // Set default loan duration to 12 months
-    selectDuration(12);
+// Debounce function to limit the calculation frequency
+function debounceCalculateCollateral() {
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(calculateCollateral, 2000);
 }
 
 // Call the function when the page loads
@@ -197,5 +193,13 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('CSV file and exchange rates loaded successfully.');
     }).catch(error => {
         console.error('Error loading CSV file or exchange rates:', error);
+    });
+
+    // Add event listeners to update calculations dynamically
+    document.getElementById('start-date').addEventListener('input', debounceCalculateCollateral);
+    document.getElementById('currency').addEventListener('change', debounceCalculateCollateral);
+    document.getElementById('loan-amount').addEventListener('input', debounceCalculateCollateral);
+    document.getElementById('interest-rate').addEventListener('input', function() {
+        updateInterestRateLabel(this.value);
     });
 });
