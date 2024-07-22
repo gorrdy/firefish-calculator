@@ -14,13 +14,14 @@
             <label for="start-date">Start Date (YYYY-MM-DD):</label>
             <input type="date" id="start-date" name="start-date" required>
 
-            <label for="months">Number of Months:</label>
-            <select id="months" name="months" required>
-                <option value="3">3</option>
-                <option value="6">6</option>
-                <option value="12">12</option>
-                <option value="18">18</option>
-            </select>
+            <label for="loan-duration">Loan Duration:</label>
+            <div id="loan-duration" class="loan-duration">
+                <div class="tile" onclick="selectDuration(3)">3 Months</div>
+                <div class="tile" onclick="selectDuration(6)">6 Months</div>
+                <div class="tile" onclick="selectDuration(12)">12 Months</div>
+                <div class="tile" onclick="selectDuration(18)">18 Months</div>
+            </div>
+            <input type="hidden" id="months" name="months" required>
 
             <label for="currency">Currency:</label>
             <select id="currency" name="currency" required>

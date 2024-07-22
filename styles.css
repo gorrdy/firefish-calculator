@@ -28,10 +28,36 @@ label {
     margin-bottom: 5px;
 }
 
-input {
+input, select {
     margin-bottom: 15px;
     padding: 10px;
     font-size: 16px;
+}
+
+.loan-duration {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.tile {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    margin: 5px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.tile:hover {
+    background-color: #0056b3;
+}
+
+.selected {
+    background-color: #0056b3;
 }
 
 button {

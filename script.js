@@ -68,6 +68,12 @@ function convertFromUSD(amount, currency) {
     }
 }
 
+function selectDuration(months) {
+    document.getElementById('months').value = months;
+    document.querySelectorAll('.tile').forEach(tile => tile.classList.remove('selected'));
+    document.querySelector(`.tile[onclick="selectDuration(${months})"]`).classList.add('selected');
+}
+
 function calculateCollateral() {
     const startDate = document.getElementById('start-date').value;
     const months = parseInt(document.getElementById('months').value);
